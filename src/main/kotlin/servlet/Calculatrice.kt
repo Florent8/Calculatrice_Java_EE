@@ -9,15 +9,25 @@ class Calculatrice : HttpServlet() {
 
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         request.characterEncoding = "UTF-8"
-        val number1 = request.getParameter("number1").toInt()
+        val paramNumber1 = request.getParameter("number1")
+        val number1 = if (paramNumber1.isEmpty()) 0 else paramNumber1.toInt()
         val operator = request.getParameter("operator")
-        val number2 = request.getParameter("number2").toInt()
+        val paramNumber2 = request.getParameter("number2")
+        val number2 = if (paramNumber2.isEmpty()) 0 else paramNumber2.toInt()
         request.setAttribute("result", "$number1 $operator ${if (number2 < 0) "($number2)" else number2.toString()} = ${when (operator) {
             "+" -> number1 + number2
             "-" -> number1 - number2
             "x" -> number1 * number2
-            "÷" -> number1 / number2
-            "mod" -> number1 % number2
+            "÷" -> try {
+                number1 / number2
+            } catch (e: ArithmeticException) {
+                "Division par zéro."
+            }
+            "mod" -> try {
+                number1 % number2
+            } catch (e: ArithmeticException) {
+                "Division par zéro"
+            }
             else -> throw IllegalArgumentException("Operator \"$operator\" is no valid.")
         }}")
         forward(request, response)
