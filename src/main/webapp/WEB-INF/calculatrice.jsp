@@ -10,6 +10,6 @@
     <input type="number" title="number2" name="number2"/>
     <button type="submit">Calculer</button>
 </form>
-${ empty result ? '' : result }
+${ empty result ? '' : '<p>'.concat(result).concat('</p>') }
 </body>
 </html>

@@ -10,10 +10,14 @@ class Calculatrice : HttpServlet() {
     override fun doPost(request: HttpServletRequest, response: HttpServletResponse) {
         val number1 = request.getParameter("number1").toInt()
         val number2 = request.getParameter("number2").toInt()
-        request.setAttribute("result", "<p>$number1+$number2=${number1 + number2}</p>")
+        val result = when {
+            number2 < 0 -> "$number1$number2=${number1 + number2}"
+            else -> "$number1+$number2=${number1 + number2}"
+        }
+        request.setAttribute("result", result)
         forward(request, response)
     }
 
-    fun forward(request: HttpServletRequest, response: HttpServletResponse) =
+    private fun forward(request: HttpServletRequest, response: HttpServletResponse) =
             servletContext.getRequestDispatcher("/WEB-INF/calculatrice.jsp").forward(request, response)
 }
